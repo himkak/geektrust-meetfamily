@@ -18,8 +18,14 @@ public class GetRelationshipOperationProcessor implements OperationProcessor {
 	
 	@Override
 	public void processOperation(List<String> args, FamilyTree family) {
-		// TODO Auto-generated method stub
+		String personName=args.get(0);
+		String relationShip=args.get(1);
 
+	}
+	
+	
+	public List<String> getPaternalUncle(String nodeName, FamilyTree family){
+		
 	}
 
 }

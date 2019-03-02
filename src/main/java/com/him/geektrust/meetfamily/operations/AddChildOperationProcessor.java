@@ -66,14 +66,16 @@ public class AddChildOperationProcessor implements OperationProcessor {
 		if (currentNode.getName().equalsIgnoreCase(motherName)) {
 			return Optional.of(currentNode);
 		}
-		return searchMotherNode(motherName, currentNode);
+		return searchNode(motherName, currentNode);
 	}
 
-	private Optional<Person> searchMotherNode(String motherName, Person currentNode) {
+	public Optional<Person> searchNode(String nodeName, Person currentNode) {
 
-		if (currentNode.getGender() == Gender.Male && currentNode.getParallelRelative() != null) {
-			currentNode = currentNode.getParallelRelative();
-		}
+		/*
+		 * if (currentNode.getGender() == Gender.Male &&
+		 * currentNode.getParallelRelative() != null) { currentNode =
+		 * currentNode.getParallelRelative(); }
+		 */
 
 		//System.out.println("Inside processNode, with args: motherName:" + motherName + ", currentNode:" + currentNode);
 		Optional<Person> searchedNode=Optional.empty();
@@ -84,20 +86,21 @@ public class AddChildOperationProcessor implements OperationProcessor {
 				// vertical iteration
 				while (currentChildNode != null) {
 
-					if (currentChildNode.getGender() == Gender.Female) {
-						if (currentChildNode.getName().equalsIgnoreCase(motherName)) {
+					//if (currentChildNode.getGender() == Gender.Female) {
+						if (currentChildNode.getName().equalsIgnoreCase(nodeName)) {
 							//System.out.println("Exiting processNode:returning:" + currentChildNode);
 							return Optional.of(currentChildNode);
 						}
-					} else {
+				//	} 
+				else {
 						Person wife = currentChildNode.getParallelRelative();
-						if (wife != null && wife.getName().equalsIgnoreCase(motherName)) {
+						if (wife != null && wife.getName().equalsIgnoreCase(nodeName)) {
 							//System.out.println("Exiting processNode:returning:" + wife);
 							return Optional.of(wife);
 						}
 					}
 					
-					Optional<Person> person= searchMotherNode(motherName, currentChildNode);
+					Optional<Person> person= searchNode(nodeName, currentChildNode);
 					if(person.isPresent()) {
 						//System.out.println("Exiting processNode:returning:" + person.get());
 						return person;
