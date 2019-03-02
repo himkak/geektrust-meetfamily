@@ -25,24 +25,23 @@ public class AddChildOperationProcessor implements OperationProcessor {
 		String motherName = args.get(0);
 		String childName = args.get(1);
 		Gender gender = Gender.valueOf(args.get(2));
-		//System.out.println("motherName:" + motherName + ", childName:" + childName + ", gender:" + gender);
+		// System.out.println("motherName:" + motherName + ", childName:" + childName +
+		// ", gender:" + gender);
 
-		Person childNode = createChildNode(childName, gender);
-
-		if(addChildNode(family, motherName, childNode)) {
+		if (addChildNode(family, motherName, childName, gender).isPresent()) {
 			System.out.println("CHILD_ADDITION_SUCCEEDED");
-		}else {
-			System.err.println("Mother with name:" + motherName + " not found");
 		}
 	}
 
-	public boolean addChildNode(FamilyTree family, String motherName, Person childNode) {
+	public Optional<Person> addChildNode(FamilyTree family, String motherName, String childName, Gender gender) {
+
 		Optional<Person> motherNode = getExistingMotherNode(motherName, family);
+		Person childNode = createChildNode(childName, gender, motherNode);
 		if (motherNode.isPresent()) {
 			addChildNode(motherNode.get(), childNode);
-			return true;
+			return Optional.of(childNode);
 		} else {
-			return false;
+			return Optional.empty();
 		}
 	}
 
@@ -57,8 +56,8 @@ public class AddChildOperationProcessor implements OperationProcessor {
 		}
 	}
 
-	private Person createChildNode(String childName, Gender gender) {
-		return Person.builder().name(childName).gender(gender).build();
+	private Person createChildNode(String childName, Gender gender, Optional<Person> parentNode) {
+		return Person.builder().name(childName).gender(gender).parentNode(parentNode).build();
 	}
 
 	private Optional<Person> getExistingMotherNode(String motherName, FamilyTree family) {
@@ -66,58 +65,18 @@ public class AddChildOperationProcessor implements OperationProcessor {
 		if (currentNode.getName().equalsIgnoreCase(motherName)) {
 			return Optional.of(currentNode);
 		}
-		return searchNode(motherName, currentNode);
-	}
-
-	public Optional<Person> searchNode(String nodeName, Person currentNode) {
-
-		/*
-		 * if (currentNode.getGender() == Gender.Male &&
-		 * currentNode.getParallelRelative() != null) { currentNode =
-		 * currentNode.getParallelRelative(); }
-		 */
-
-		//System.out.println("Inside processNode, with args: motherName:" + motherName + ", currentNode:" + currentNode);
-		Optional<Person> searchedNode=Optional.empty();
-		if (currentNode.getGender()==Gender.Female && currentNode.getDirectChildRelations() != null && currentNode.getDirectChildRelations().size() != 0) {
-			List<Person> childrenNodes = currentNode.getDirectChildRelations();
-			for (Person currentChildNode : childrenNodes) { // horizontal iteration
-
-				// vertical iteration
-				while (currentChildNode != null) {
-
-					//if (currentChildNode.getGender() == Gender.Female) {
-						if (currentChildNode.getName().equalsIgnoreCase(nodeName)) {
-							//System.out.println("Exiting processNode:returning:" + currentChildNode);
-							return Optional.of(currentChildNode);
-						}
-				//	} 
-				else {
-						Person wife = currentChildNode.getParallelRelative();
-						if (wife != null && wife.getName().equalsIgnoreCase(nodeName)) {
-							//System.out.println("Exiting processNode:returning:" + wife);
-							return Optional.of(wife);
-						}
-					}
-					
-					Optional<Person> person= searchNode(nodeName, currentChildNode);
-					if(person.isPresent()) {
-						//System.out.println("Exiting processNode:returning:" + person.get());
-						return person;
-					}else {
-						break;
-					}
-					/*
-					 * if (person.isPresent() || person.get().getDirectChildRelations() == null ||
-					 * person.get().getDirectChildRelations().size() == 0) { return person; }
-					 */
-				}
+		Optional<Person> motherNode = currentNode.searchNode(motherName);
+		if (motherNode.isPresent()) {
+			if (motherNode.get().getGender() == Gender.Female) {
+				return motherNode;
+			} else {
+				System.out.println("CHILD_ADDITION_FAILED");
+				return Optional.empty();
 			}
 		} else {
-			//System.out.println("No child.");
+			System.out.println("PERSON_NOT_FOUND ");
+			return Optional.empty();
 		}
-		//System.out.println("Exiting processNode:returning empty");
-		return searchedNode;
 	}
 
 }

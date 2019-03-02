@@ -12,7 +12,7 @@ public enum Relationship {
 		this.relationName = relationName;
 	}
 
-	public Relationship getEnum(String relName) {
+	public static Relationship getEnum(String relName) {
 		for (Relationship value : values()) {
 			if (value.relationName.equals(relName)) {
 				return value;
@@ -20,4 +20,5 @@ public enum Relationship {
 		}
 		return null;
 	}
+
 }
