@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Built-By: hmnsh
+Build-Jdk: 11.0.2
+Main-Class: {{this.is.your.qualified.name.of.main.class}}
+Created-By: Maven Integration for Eclipse
+
