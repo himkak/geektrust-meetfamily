@@ -1,10 +1,19 @@
 package com.him.geektrust.meetfamily.model;
+/**
+ * Relationship enum.
+ * @author himanshu
+ *
+ */
+public enum Relationship implements RelationshipHandler{
 
-public enum Relationship {
-
-	Paternal_Uncle("Paternal-Uncle"), Maternal_Uncle("Maternal-Uncle"), Paternal_Aunt("Paternal-Aunt"),
-	Maternal_Aunt("Maternal-Aunt"), Sister_In_Law("Sister-In-Law"), Brother_In_Law("Brother-In-Law"), Son("Son"),
-	Daughter("Daughter"), Siblings("Siblings");
+	Paternal_Uncle("Paternal-Uncle")
+	/*
+	 * , Maternal_Uncle("Maternal-Uncle"), Paternal_Aunt("Paternal-Aunt"),
+	 * Maternal_Aunt("Maternal-Aunt"), Sister_In_Law("Sister-In-Law"),
+	 * Brother_In_Law("Brother-In-Law"), Son("Son"), Daughter("Daughter"),
+	 * Siblings("Siblings")
+	 */
+	;
 
 	private String relationName;
 

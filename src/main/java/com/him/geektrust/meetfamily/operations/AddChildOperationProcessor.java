@@ -7,13 +7,14 @@ import java.util.Optional;
 import com.him.geektrust.meetfamily.model.FamilyTree;
 import com.him.geektrust.meetfamily.model.Person;
 import com.him.geektrust.meetfamily.model.Person.Gender;
-
+/*
+ * This singleton class searches the mother node, creates a child node and adds the child node to mother node.
+ */
 public class AddChildOperationProcessor implements OperationProcessor {
 
 	private static OperationProcessor processor = new AddChildOperationProcessor();
 
 	private AddChildOperationProcessor() {
-		// throw new Exception();
 	}
 
 	public static OperationProcessor getInstance() {
@@ -25,9 +26,6 @@ public class AddChildOperationProcessor implements OperationProcessor {
 		String motherName = args.get(0);
 		String childName = args.get(1);
 		Gender gender = Gender.valueOf(args.get(2));
-		// System.out.println("motherName:" + motherName + ", childName:" + childName +
-		// ", gender:" + gender);
-
 		if (addChildNode(family, motherName, childName, gender).isPresent()) {
 			System.out.println("CHILD_ADDITION_SUCCEEDED");
 		}

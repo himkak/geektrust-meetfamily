@@ -7,7 +7,11 @@ import java.util.function.BiPredicate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
+/**
+ * This is the main node class.
+ * @author himanshu
+ *
+ */
 @Setter
 @Getter
 @Builder
@@ -53,23 +57,15 @@ public class Person {
 	}
 
 	public Optional<Person> getParentNode() {
-		// String parentNodeName = parentNode.isPresent() ? parentNode.get().getName() :
-		// null;
-		// System.out.println("Getting parent node for " + name + ", parentNode:" +
-		// parentNodeName);
 		if (parentNode.isPresent()) {
 			return parentNode;
 		} else {
 			return getParallelRelative() != null ? getParallelRelative().get().getParentNode() : Optional.empty();
 		}
-
 	}
 
 	private Optional<Person> searchNode(String nodeName, Person currentNode) {
 
-		// System.out
-		// .println("Inside processNode, with args: searchNodeName:" + nodeName + ",
-		// currentNode:" + currentNode);
 		if (currentNode.getName().equals(nodeName)) {
 			return Optional.of(currentNode);
 		} else {
@@ -86,7 +82,6 @@ public class Person {
 				// vertical iteration
 				while (currentChildNode != null) {
 					if (compareNodeName.test(currentChildNode, nodeName)) {
-						// System.out.println("Exiting processNode:returning:" + currentChildNode);
 						return Optional.of(currentChildNode);
 					} else {
 
@@ -94,40 +89,25 @@ public class Person {
 								? currentChildNode.getParallelRelative().get()
 								: null;
 						if (wife != null && wife.getName().equalsIgnoreCase(nodeName)) {
-							// System.out.println("Exiting processNode:returning:" + wife);
 							return Optional.of(wife);
-						} else {
-							// System.out.println("Wife not found");
-						}
+						} 
 					}
 
 					Optional<Person> person = searchNode(nodeName, currentChildNode);
 					if (person.isPresent()) {
-						// System.out.println("Exiting processNode:returning:" + person.get());
 						return person;
 					} else {
-						// System.out.println("Breaking the loop");
 						break;
 					}
 				}
 			}
 		} else {
-			// System.out.println("No child.");
 		}
-		// System.out.println("Exiting processNode:returning empty");
 		return searchedNode;
 	}
 
 	@Override
 	public String toString() {
-		/*
-		 * return "Person [name=" + name + ", gender=" + gender +
-		 * ", directChildRelations=" + directChildRelations != null ?
-		 * directChildRelations.stream().map(Person::getName).collect(Collectors.joining
-		 * (",")) : null + ", parallelRelative=" + parallelRelative != null ?
-		 * parallelRelative.getName() : null + ", parentNode=" + parentNode.get() !=
-		 * null ? parentNode.get().getName() : null + "]";
-		 */
 		return "Person [name=" + name + ", gender=" + gender + "]";
 	}
 
