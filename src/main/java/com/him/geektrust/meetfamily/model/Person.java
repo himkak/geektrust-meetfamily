@@ -7,8 +7,10 @@ import java.util.function.BiPredicate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
 /**
  * This is the main node class.
+ * 
  * @author himanshu
  *
  */
@@ -21,7 +23,7 @@ public class Person {
 	private Gender gender;
 	private List<Person> directChildRelations;
 	@Builder.Default()
-	private Optional<Person> parallelRelative = Optional.empty();
+	private Optional<Person> spouse = Optional.empty();
 	@Builder.Default()
 	private Optional<Person> parentNode = Optional.empty();
 	@Builder.Default()
@@ -31,9 +33,9 @@ public class Person {
 		Male, Female
 	}
 
-	public void setParallelRelative(String name, Gender gender) {
-		parallelRelative = Optional.of(Person.builder().name(name).gender(gender).build());
-		parallelRelative.get().setParallelRelative(Optional.of(this));
+	public void setSpouse(String name, Gender gender) {
+		spouse = Optional.of(Person.builder().name(name).gender(gender).build());
+		spouse.get().setSpouse(Optional.of(this));
 	}
 
 	public Optional<Person> searchNode(String nodeName) {
@@ -44,7 +46,7 @@ public class Person {
 		if (getGender() == Gender.Female) {
 			return this;
 		} else {
-			return getParallelRelative().get();
+			return getSpouse().get();
 		}
 	}
 
@@ -52,7 +54,7 @@ public class Person {
 		if (getGender() == Gender.Male) {
 			return this;
 		} else {
-			return getParallelRelative().get();
+			return getSpouse().get();
 		}
 	}
 
@@ -60,7 +62,7 @@ public class Person {
 		if (parentNode.isPresent()) {
 			return parentNode;
 		} else {
-			return getParallelRelative() != null ? getParallelRelative().get().getParentNode() : Optional.empty();
+			return getSpouse() != null ? getSpouse().get().getParentNode() : Optional.empty();
 		}
 	}
 
@@ -69,13 +71,13 @@ public class Person {
 		if (currentNode.getName().equals(nodeName)) {
 			return Optional.of(currentNode);
 		} else {
-			if (currentNode.getGender() != Gender.Female && currentNode.getParallelRelative() != null) {
-				currentNode = currentNode.getParallelRelative().isPresent() ? currentNode.getParallelRelative().get()
-						: null;
+			if (currentNode.getGender() != Gender.Female && currentNode.getSpouse() != null) {
+				currentNode = currentNode.getSpouse().isPresent() ? currentNode.getSpouse().get() : null;
 			}
 		}
 		Optional<Person> searchedNode = Optional.empty();
-		if (currentNode!=null && currentNode.getDirectChildRelations() != null && currentNode.getDirectChildRelations().size() != 0) {
+		if (currentNode != null && currentNode.getDirectChildRelations() != null
+				&& currentNode.getDirectChildRelations().size() != 0) {
 			List<Person> childrenNodes = currentNode.getDirectChildRelations();
 			for (Person currentChildNode : childrenNodes) { // horizontal iteration
 
@@ -85,12 +87,11 @@ public class Person {
 						return Optional.of(currentChildNode);
 					} else {
 
-						Person wife = currentChildNode.getParallelRelative().isPresent()
-								? currentChildNode.getParallelRelative().get()
+						Person wife = currentChildNode.getSpouse().isPresent() ? currentChildNode.getSpouse().get()
 								: null;
 						if (wife != null && wife.getName().equalsIgnoreCase(nodeName)) {
 							return Optional.of(wife);
-						} 
+						}
 					}
 
 					Optional<Person> person = searchNode(nodeName, currentChildNode);
@@ -101,7 +102,6 @@ public class Person {
 					}
 				}
 			}
-		} else {
 		}
 		return searchedNode;
 	}

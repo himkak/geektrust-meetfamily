@@ -1,5 +1,7 @@
 package com.him.geektrust.meetfamily.model;
 
+import java.util.function.Supplier;
+
 import com.him.geektrust.meetfamily.operations.AddChildOperationProcessor;
 import com.him.geektrust.meetfamily.operations.GetRelationshipOperationProcessor;
 import com.him.geektrust.meetfamily.operations.OperationProcessor;
@@ -12,16 +14,16 @@ import com.him.geektrust.meetfamily.operations.OperationProcessor;
  *
  */
 public enum Operation {
-	ADD_CHILD, GET_RELATIONSHIP;
+	ADD_CHILD(() -> AddChildOperationProcessor.getInstance()),
+	GET_RELATIONSHIP(() -> GetRelationshipOperationProcessor.getInstance());
 
-	public OperationProcessor getProcessor() {
-		if (equals(ADD_CHILD)) {
-			return AddChildOperationProcessor.getInstance();
+	private Supplier<OperationProcessor> supplier;
 
-		} else if (equals(GET_RELATIONSHIP)) {
-			return GetRelationshipOperationProcessor.getInstance();
-		}
-		return null;
+	Operation(Supplier<OperationProcessor> supp) {
+		supplier = supp;
 	}
 
+	public OperationProcessor getProcessor() {
+		return supplier.get();
+	}
 }

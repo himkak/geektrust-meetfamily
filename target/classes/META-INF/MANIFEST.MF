@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-Built-By: himanshu
-Build-Jdk: 11.0.2
-Main-Class: com.him.geektrust.meetfamily.MeetFamilyApplication
-Created-By: Maven Integration for Eclipse
-
