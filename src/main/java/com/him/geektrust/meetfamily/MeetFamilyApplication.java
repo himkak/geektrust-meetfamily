@@ -17,6 +17,10 @@ import com.him.geektrust.meetfamily.operations.FileProcessor;
 public class MeetFamilyApplication {
 
 	public static void main(String[] args) {
+		processRequest(args);
+	}
+
+	private static void processRequest(String[] args) {
 		String pathOfInputFile = args[0];
 
 		FamilyTree familyTree = FamilyTreeInitializer.initializeFamilyTree();
